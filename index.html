@@ -21,7 +21,6 @@
             background-color: #f9f9f9;
         }
     </style>
-    <script src="https://crm.zoho.eu/crm/v2/SDK/JS/ZohoCRM.js"></script>
 </head>
 <body>
     <h1>Zoho CRM Widget</h1>
@@ -29,40 +28,53 @@
         <p>Loading record information...</p>
     </div>
     <script>
+        // Log script start
         console.log("SCRIPT ZOHO");
 
-        // Initialize the Zoho CRM embedded app
-        ZOHO.embeddedApp.on("PageLoad", function(data) {
-            console.log("SCRIPT ZOHO PageLoad");
+        // Load the Zoho CRM SDK script dynamically
+        var script = document.createElement('script');
+        script.src = 'https://crm.zoho.eu/crm/v2/SDK/JS/ZohoCRM.js';
+        script.type = 'text/javascript';
+        script.onload = function() {
+            console.log("Zoho CRM SDK loaded successfully");
 
-            // Get the record information
-            ZOHO.CRM.UI.getPageInfo().then(function(pageInfo) {
-                console.log(pageInfo);
+            // Initialize the Zoho CRM embedded app
+            ZOHO.embeddedApp.on("PageLoad", function(data) {
+                console.log("SCRIPT ZOHO PageLoad");
 
-                // Extract the record type and ID
-                var recordType = pageInfo.Entity;
-                var recordId = pageInfo.EntityId;
+                // Get the record information
+                ZOHO.CRM.UI.getPageInfo().then(function(pageInfo) {
+                    console.log(pageInfo);
 
-                // Use the recordType and recordId as needed
-                console.log("Record Type: " + recordType);
-                console.log("Record ID: " + recordId);
+                    // Extract the record type and ID
+                    var recordType = pageInfo.Entity;
+                    var recordId = pageInfo.EntityId;
 
-                // Display the record information in the HTML
-                document.getElementById('record-info').innerHTML = `
-                    <p><strong>Record Type:</strong> ${recordType}</p>
-                    <p><strong>Record ID:</strong> ${recordId}</p>
-                `;
-            }).catch(function(error) {
-                console.error("Error fetching page info:", error);
-                document.getElementById('record-info').innerHTML = `
-                    <p>Error fetching record information. Please check the console for details.</p>
-                `;
+                    // Use the recordType and recordId as needed
+                    console.log("Record Type: " + recordType);
+                    console.log("Record ID: " + recordId);
+
+                    // Display the record information in the HTML
+                    document.getElementById('record-info').innerHTML = `
+                        <p><strong>Record Type:</strong> ${recordType}</p>
+                        <p><strong>Record ID:</strong> ${recordId}</p>
+                    `;
+                }).catch(function(error) {
+                    console.error("Error fetching page info:", error);
+                    document.getElementById('record-info').innerHTML = `
+                        <p>Error fetching record information. Please check the console for details.</p>
+                    `;
+                });
             });
-        });
 
-        // Initialize the widget
-        ZOHO.embeddedApp.init();
-        console.log("SCRIPT ZOHO END");
+            // Initialize the widget
+            ZOHO.embeddedApp.init();
+            console.log("SCRIPT ZOHO END");
+        };
+        script.onerror = function() {
+            console.error("Failed to load Zoho CRM SDK script");
+        };
+        document.head.appendChild(script);
     </script>
 </body>
 </html>
